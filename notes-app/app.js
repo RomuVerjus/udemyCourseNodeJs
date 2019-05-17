@@ -1,12 +1,35 @@
-const fs = require('fs')
-const utils = require('./utils.js')
-const validator = require('validator')
 const chalk = require('chalk')
+const note = require('./notes')
+const yargs = require('yargs');
 
-fs.writeFileSync("notes.txt", utils.name + "\n")
+yargs.version("1.1.0")
 
-fs.appendFileSync("notes.txt", "a second message");
-
-
-const colorize = chalk.blue.underline 
-console.log(colorize(utils.add(1, 2)))
+yargs.command({
+    command: 'add',
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        },
+        body: {
+            describe: 'Note body',
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    describe: 'Add a new note',
+    handler: (argv) => console.log(`Adding a new note "${argv.title}": "${argv.body}"`)
+}).command({
+    command: 'remove',
+    describe: 'Remove a note',
+    handler: () => console.log('Remove a note!')
+}).command({
+    command: 'read',
+    describe: 'Read the note',
+    handler: () => console.log('Read the note!')
+}).command({
+    command: 'list',
+    describe: 'List notes!',
+    handler: () => console.log('List notes!')
+}).parse()
