@@ -1,6 +1,7 @@
 const chalk = require('chalk')
 const note = require('./notes')
-const yargs = require('yargs');
+const yargs = require('yargs')
+const fs = require('fs')
 
 yargs.version("1.1.0")
 
@@ -19,7 +20,7 @@ yargs.command({
         }
     },
     describe: 'Add a new note',
-    handler: (argv) => console.log(`Adding a new note "${argv.title}": "${argv.body}"`)
+    handler: (argv) => note.saveNote(argv.title, argv.body)
 }).command({
     command: 'remove',
     describe: 'Remove a note',
