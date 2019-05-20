@@ -3,26 +3,47 @@ const fs = require('fs');
 const getNotes = () => "youNotes ..."
 const savedFile = "notes.json"
 
-const saveNote = (title, body) => {
-    if (!fs.existsSync(savedFile)) {
-        fs.writeFileSync(savedFile, "")
-    }
+const addNote = (title, body) => {
+    try {
+        const notes = loadNotes()
+        if (doesNoteExist(title, notes)) {
+            console.log(`The note "${title}" already exists`);
+        } else {
+            const newNotes = notes.concat({
+                "title": title,
+                "body": body
+            })
+            saveNotes(newNotes)
+        }
 
-    const note = {
-        title: title,
-        body: body
+    } catch (error) {
+        console.log(error);
+        console.log(`The file ${savedFile} does not exist`);
     }
+}
 
-    const noteBuffer = Buffer.from(JSON.stringify(note))
+const loadNotes = () => {
     const fileBuffer = fs.readFileSync(savedFile)
+    const fileToString = fileBuffer.toString()
 
-    const updatedBuffer = Buffer.concat([fileBuffer, noteBuffer])
+    try {
+        return JSON.parse(fileToString)
+    } catch (error) {
+        return []
+    }
+}
 
-    fs.writeFileSync(savedFile, updatedBuffer)
+const saveNotes = (notes) => {
+    const notesJson = JSON.stringify(notes)
+    fs.writeFileSync(savedFile, notesJson)
+}
 
+const doesNoteExist = (title, notes) => {
+    const notesTitle = notes.map(note => note.title)
+    return notesTitle.includes(title)
 }
 
 module.exports = {
     getNotes,
-    saveNote
+    addNote
 };

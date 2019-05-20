@@ -20,7 +20,7 @@ yargs.command({
         }
     },
     describe: 'Add a new note',
-    handler: (argv) => note.saveNote(argv.title, argv.body)
+    handler: (argv) => note.addNote(argv.title, argv.body)
 }).command({
     command: 'remove',
     describe: 'Remove a note',
