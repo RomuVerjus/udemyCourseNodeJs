@@ -31,6 +31,23 @@ const removeNote = (title) => {
     }
 }
 
+const readNote = (title) => {
+    const notes = loadNotes()
+    if (doesNoteExist(title, notes)) {
+        const note = notes.find(note => note.title === title)
+        printNote(note)
+    } else {
+        console.log(`The note "${title}" does not exist.`);
+    }
+}
+
+const listNotes = () => {
+    const notes = loadNotes()
+    notes.forEach(note => {
+        console.log(`  - ${note.title}`);
+    });
+}
+
 const loadNotes = () => {
     try {
         const fileBuffer = fs.readFileSync(savedFile)
@@ -46,6 +63,11 @@ const loadNotes = () => {
     }
 }
 
+const printNote = (note) => {
+    console.log(`Note's title : ${note.title}`);
+    console.log(`Note's body: ${note.body}`);
+}
+
 const saveNotes = (notes) => {
     const notesJson = JSON.stringify(notes)
     fs.writeFileSync(savedFile, notesJson)
@@ -58,5 +80,7 @@ const doesNoteExist = (title, notes) => {
 module.exports = {
     getNotes,
     addNote,
-    removeNote
-};
+    removeNote,
+    readNote,
+    listNotes
+}
