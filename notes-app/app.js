@@ -16,15 +16,23 @@ yargs.command({
         body: {
             describe: 'Note body',
             demandOption: true,
-            type: 'string'
+            type: 'string',
+
         }
     },
     describe: 'Add a new note',
     handler: (argv) => note.addNote(argv.title, argv.body)
 }).command({
     command: 'remove',
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
     describe: 'Remove a note',
-    handler: () => console.log('Remove a note!')
+    handler: (argv) => note.removeNote(argv.title)
 }).command({
     command: 'read',
     describe: 'Read the note',

@@ -4,7 +4,7 @@ const getNotes = () => "youNotes ..."
 const savedFile = "notes.json"
 
 const addNote = (title, body) => {
-    try {
+    if (title !== "") {
         const notes = loadNotes()
         if (doesNoteExist(title, notes)) {
             console.log(`The note "${title}" already exists`);
@@ -15,21 +15,34 @@ const addNote = (title, body) => {
             })
             saveNotes(newNotes)
         }
+    } else {
+        console.log("The title can't be empty");
+    }
+}
 
-    } catch (error) {
-        console.log(error);
-        console.log(`The file ${savedFile} does not exist`);
+const removeNote = (title) => {
+    const notes = loadNotes()
+    if (doesNoteExist(title, notes)) {
+        console.log("removing notes");
+        const notesUpdated = notes.filter(note => note.title !== title)
+        saveNotes(notesUpdated)
+    } else {
+        console.log(`The note "${title}" does not exist.`);
     }
 }
 
 const loadNotes = () => {
-    const fileBuffer = fs.readFileSync(savedFile)
-    const fileToString = fileBuffer.toString()
-
     try {
-        return JSON.parse(fileToString)
+        const fileBuffer = fs.readFileSync(savedFile)
+        const fileToString = fileBuffer.toString()
+        try {
+            return JSON.parse(fileToString)
+        } catch (error) {
+            return []
+        }
     } catch (error) {
-        return []
+        console.log(`The file ${savedFile} does not exist`);
+        throw error
     }
 }
 
@@ -39,11 +52,11 @@ const saveNotes = (notes) => {
 }
 
 const doesNoteExist = (title, notes) => {
-    const notesTitle = notes.map(note => note.title)
-    return notesTitle.includes(title)
+    return notes.some(note => note.title === title)
 }
 
 module.exports = {
     getNotes,
-    addNote
+    addNote,
+    removeNote
 };
