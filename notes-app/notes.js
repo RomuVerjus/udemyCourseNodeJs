@@ -43,6 +43,7 @@ const readNote = (title) => {
 
 const listNotes = () => {
     const notes = loadNotes()
+    debugger
     notes.forEach(note => {
         console.log(`  - ${note.title}`);
     });
